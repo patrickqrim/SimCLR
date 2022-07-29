@@ -3,7 +3,7 @@ from data_aug.gaussian_blur import GaussianBlur
 from torchvision import transforms, datasets
 from data_aug.view_generator import ContrastiveLearningViewGenerator
 from exceptions.exceptions import InvalidDatasetSelection
-
+import os
 
 class ContrastiveLearningDataset:
     def __init__(self, root_folder):
@@ -32,7 +32,12 @@ class ContrastiveLearningDataset:
                                                           transform=ContrastiveLearningViewGenerator(
                                                               self.get_simclr_pipeline_transform(96),
                                                               n_views),
-                                                          download=True)}
+                                                          download=True),
+
+                          'emotion': lambda: datasets.ImageFolder(os.path.join(self.root_folder, 'train'), 
+                                                    transform=ContrastiveLearningViewGenerator(
+                                                                self.get_simclr_pipeline_transform(224),
+                                                                n_views))}
 
         try:
             dataset_fn = valid_datasets[name]
