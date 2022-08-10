@@ -4,6 +4,7 @@ import torch.backends.cudnn as cudnn
 from torchvision import models
 from data_aug.contrastive_learning_dataset import ContrastiveLearningDataset
 from models.resnet_simclr import ResNetSimCLR
+from models.wscnet_simclr import WSCNetSimCLR
 from simclr import SimCLR
 
 model_names = sorted(name for name in models.__dict__
@@ -22,7 +23,7 @@ parser.add_argument('-a', '--arch', metavar='ARCH', default='resnet50',
                          ' (default: resnet50)')
 parser.add_argument('-j', '--workers', default=8, type=int, metavar='N',
                     help='number of data loading workers (default: 32)')
-parser.add_argument('--epochs', default=100, type=int, metavar='N',
+parser.add_argument('--epochs', default=2, type=int, metavar='N',
                     help='number of total epochs to run')
 parser.add_argument('-b', '--batch-size', default=64, type=int,
                     metavar='N',
@@ -75,12 +76,12 @@ def main():
         train_dataset, batch_size=args.batch_size, shuffle=True,
         num_workers=args.workers, pin_memory=True, drop_last=True)
 
-    model = ResNetSimCLR(base_model=args.arch, out_dim=args.out_dim)
+    model = WSCNetSimCLR(out_dim=args.out_dim)
+    optimizer, scheduler = model.get_optimizer()
 
-    optimizer = torch.optim.Adam(model.parameters(), args.lr, weight_decay=args.weight_decay)
-
-    scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=len(train_loader), eta_min=0,
-                                                           last_epoch=-1)
+    # optimizer = torch.optim.Adam(model.parameters(), args.lr, weight_decay=args.weight_decay)
+    # scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=len(train_loader), eta_min=0,
+    #                                                        last_epoch=-1)
 
     #  It’s a no-op if the 'gpu_index' argument is a negative integer or None.
     with torch.cuda.device(args.gpu_index):

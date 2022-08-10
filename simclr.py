@@ -112,7 +112,7 @@ class SimCLR(object):
 
         logging.info("Training has finished.")
         # save model checkpoints
-        checkpoint_name = 'checkpoint_{:04d}.pth.tar'.format(self.args.epochs)
+        checkpoint_name = 'wscnet_checkpoint_{:04d}.pth.tar'.format(self.args.epochs)
         save_checkpoint({
             'epoch': self.args.epochs,
             'arch': self.args.arch,

@@ -36,7 +36,7 @@ class ContrastiveLearningDataset:
 
                           'emotion': lambda: datasets.ImageFolder(os.path.join(self.root_folder, 'train'), 
                                                     transform=ContrastiveLearningViewGenerator(
-                                                                self.get_simclr_pipeline_transform(224),
+                                                                self.get_simclr_pipeline_transform(448),
                                                                 n_views))}
 
         try:
